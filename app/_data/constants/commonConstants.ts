@@ -1,0 +1,4 @@
+export const requiredEnvironmentVariables = [
+  'SHOPIFY_STORE_DOMAIN',
+  'SHOPIFY_STOREFRONT_ACCESS_TOKEN'
+]

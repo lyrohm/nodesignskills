@@ -1,36 +1,160 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nodesignskills
 
-## Getting Started
+## Setting up a pre-commit hook :
 
-First, run the development server:
+Pre-commit hooks help enforce code quality by running checks before allowing commits.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 🛠 Step 1: Install Husky
+
+Husky is a tool that makes it easy to manage Git hooks in JavaScript projects.
+
+```sh
+npm install husky --save-dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then, initialize Husky:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+npx husky-init && npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This command creates a `.husky` directory and sets up a `pre-commit` hook with a default example.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+### 🎯 Step 2: Configure ESLint and Prettier
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To prevent conflicts between ESLint and Prettier, install the required dependencies:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```sh
+npm install --dev prettier eslint-plugin-prettier eslint-config-prettier
+```
 
-## Deploy on Vercel
+Then, update your `.eslintrc.json` configuration:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```json
+{
+  "extends": ["next", "next/core-web-vitals", "prettier"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "warn",
+    "no-console": "warn"
+  }
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+You can also add a `.prettierrc` file for formatting preferences:
+
+```json
+{
+  "singleQuote": true,
+  "trailingComma": "none",
+  "quoteProps": "as-needed",
+  "bracketSameLine": false,
+  "bracketSpacing": true,
+  "tabWidth": 2
+}
+```
+
+---
+
+### ✅ Step 3: Add a Pre-Commit Hook
+
+Now, create a **pre-commit** hook that runs ESLint:
+
+```sh
+npx husky add .husky/pre-commit "npm run lint"
+```
+
+This creates a `.husky/pre-commit` file with the command to lint your code before every commit.
+
+---
+
+### 🔧 Step 4: Optimize with lint-staged (Recommended)
+
+To optimize performance, run linting and formatting only on modified files using **lint-staged**:
+
+```sh
+npm install lint-staged --save-dev
+```
+
+Add a `lint-staged` configuration in `package.json`:
+
+```json
+{
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": "eslint --fix",
+    "**/*.{json,md,css,scss}": "prettier --write"
+  }
+}
+```
+
+Modify the Husky pre-commit hook:
+
+```sh
+npx husky add .husky/pre-commit "npx lint-staged"
+```
+
+🔹 **What this does:**
+
+- Runs `eslint --fix` on changed JavaScript/TypeScript files.
+- Runs `prettier --write` on changed JSON, Markdown, CSS, and SCSS files.
+
+---
+
+### 🏁 Step 5: Test the Hook
+
+1. Modify a file with a linting issue.
+2. Try committing:
+
+   ```sh
+   git add .
+   git commit -m "Test pre-commit hook"
+   ```
+
+If the hook is working, Git will prevent the commit if there are linting issues.
+
+---
+
+### 🔍 Step 6: Add Additional Checks
+
+You can extend the pre-commit hook with:
+
+- **Unit tests before commit:**
+  ```sh
+  npx husky add .husky/pre-commit "npm test"
+  ```
+- **TypeScript type checking:**
+  ```sh
+  npx husky add .husky/pre-commit "tsc --noEmit"
+  ```
+
+If you get an error about a missing test script, add this to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "test": "echo \"No tests yet\" && exit 0"
+  }
+}
+```
+
+Alternatively, remove `npm test` from the pre-commit hook:
+
+```sh
+npx husky set .husky/pre-commit "npx lint-staged"
+```
+
+---
+
+## Deploy on Vercel :
+
+Different examples manually
+
+- Manually
+
+```
+npm i -g vercel
+vercel login
+vercel build && vercel deploy --prebuilt
+```
