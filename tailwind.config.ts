@@ -5,9 +5,9 @@ import type { Config } from 'tailwindcss'
 export default {
   darkMode: ['class'],
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}'
   ],
   theme: {
     container: {
@@ -19,8 +19,8 @@ export default {
     },
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
         main: {
           DEFAULT: '#fffdf1',
           dark: '#121212'
@@ -35,10 +35,16 @@ export default {
         }
       },
       screens: {
-        '3xl': '1920px'
-      },
-    },
+        '3xl': '1920px',
+        '4xl': '2560px',
+        '5xl': '3840px'
+      }
+    }
   },
   plugins: [
-    require('tailwindcss-debug-screens')],
-} satisfies Config;
+    require('tailwindcss-debug-screens'),
+    require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/forms')
+  ]
+} satisfies Config
